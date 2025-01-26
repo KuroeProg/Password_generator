@@ -1,5 +1,6 @@
 import random
 from cryptography.fernet import Fernet
+import os
 
 def main_prog():
     print("Password Generator\n")
@@ -19,7 +20,7 @@ def main_prog():
                 password = cipher_suite.decrypt(encrypted_password).decode()
                 print("Password: " + password)
 
-    while True:
+    while (True):
         print("Do you want to generate a password? (y/n)")
         choice = input()
         if choice == "y":
@@ -56,8 +57,23 @@ def save_password(password):
     encrypted_password = cipher_suite.encrypt(password.encode())
     print("Enter the filename to save the password")
     filename = input()
+    if os.path.exists(filename):
+        print("Do you want to save your password in" + {filename} + "? (y/n)")
+        choice = input()
+        if (choice == "y"):
+            with open(filename, "ab") as file:
+                file.write(key + b"\n" + encrypted_password + b"\n" + name.encoded() + b"\n")
+            print("Password saved to " + filename)
+            return
+    else:
+        print("File does not exist. Do you want to create it? (y/n)")
+        choice = input()
+        if choice == "n":
+            return
+    print("What name do you want to give to this password?")
+    name = input()
     with open(filename, "ab") as file:
-        file.write(key + b"\n" + encrypted_password)
+        file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
     print("Password saved to " + filename)
 
 if __name__ == "__main__":
