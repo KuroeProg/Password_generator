@@ -10,6 +10,9 @@ def main_prog():
     if choice == "y":
         print("Enter the filename to access the passwords")
         filename = input()
+        if (not os.path.exists(filename)):
+            print("File does not exist.")
+            return
         with open(filename, "rb") as file:
             while True:
                 key = file.readline().strip()
@@ -57,12 +60,17 @@ def save_password(password):
     encrypted_password = cipher_suite.encrypt(password.encode())
     print("Enter the filename to save the password")
     filename = input()
+    name = filename
+    print("What name do you want to give to this password?")
+    name = input()
+    with open(filename, "ab") as file:
+        file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
     if os.path.exists(filename):
-        print("Do you want to save your password in" + {filename} + "? (y/n)")
+        print("Do you want to save your password in " + filename + "? (y/n)")
         choice = input()
         if (choice == "y"):
             with open(filename, "ab") as file:
-                file.write(key + b"\n" + encrypted_password + b"\n" + name.encoded() + b"\n")
+                file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
             print("Password saved to " + filename)
             return
     else:
@@ -70,10 +78,6 @@ def save_password(password):
         choice = input()
         if choice == "n":
             return
-    print("What name do you want to give to this password?")
-    name = input()
-    with open(filename, "ab") as file:
-        file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
     print("Password saved to " + filename)
 
 if __name__ == "__main__":
