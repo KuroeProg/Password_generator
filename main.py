@@ -7,6 +7,9 @@ def main_prog():
     print("Welcome to the password generator!")
     print("Do you want to access to your passwords? (y/n)")
     choice = input()
+    if choice != "y" and choice != "n" or choice == "":
+        print("Invalid choice.")
+        return
     if choice == "y":
         print("Enter the filename to access the passwords")
         filename = input()
@@ -26,6 +29,8 @@ def main_prog():
     while (True):
         print("Do you want to generate a password? (y/n)")
         choice = input()
+        if choice == "n":
+            exit_prog()
         if choice == "y":
             print("How many characters do you want?")
             length = int(input())
@@ -53,6 +58,10 @@ def generate_password(length, specials):
     print("Generated password: " + password)
     return password
 
+def exit_prog():
+    print("Goodbye!")
+    exit()
+
 def save_password(password):
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
@@ -63,11 +72,13 @@ def save_password(password):
     name = filename
     print("What name do you want to give to this password?")
     name = input()
-    with open(filename, "ab") as file:
-        file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
+    # with open(filename, "ab") as file:
+    #     file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
     if os.path.exists(filename):
         print("Do you want to save your password in " + filename + "? (y/n)")
         choice = input()
+        if (choice == "n"):
+            exit_prog()
         if (choice == "y"):
             with open(filename, "ab") as file:
                 file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
@@ -76,6 +87,9 @@ def save_password(password):
     else:
         print("File does not exist. Do you want to create it? (y/n)")
         choice = input()
+        if choice == "y":
+            with open(filename, "wb") as file:
+                file.write(key + b"\n" + encrypted_password + b"\n" + name.encode() + b"\n")
         if choice == "n":
             return
     print("Password saved to " + filename)
