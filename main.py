@@ -18,13 +18,20 @@ def main_prog():
             return
         with open(filename, "rb") as file:
             while True:
-                key = file.readline().strip()
-                if not key:
-                    break
-                encrypted_password = file.readline().strip()
-                cipher_suite = Fernet(key)
-                password = cipher_suite.decrypt(encrypted_password).decode()
-                print("Password: " + password)
+                try:
+                    key = file.readline().rstrip(b'\n')
+                    if not key:
+                        break
+                    encrypted_password = file.readline().rstrip(b'\n')
+                    name = file.readline().rstrip(b'\n')
+                
+                    cipher_suite = Fernet(key)
+                    password = cipher_suite.decrypt(encrypted_password).decode()
+                    print(f"Name :{name.decode()}")
+                    print(f"Password: {password}\n")
+                except:
+                    print("Error reading file.")
+                    return
 
     while (True):
         print("Do you want to generate a password? (y/n)")
